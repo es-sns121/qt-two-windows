@@ -11,7 +11,7 @@ class QLineEdit;
 class QPushButton;
 class QVBoxLayout;
 
-// Data the two windows will share.
+// Data the two windows can share.
 class Model : public QObject {
 	Q_OBJECT
 
@@ -36,9 +36,9 @@ class Counter : public QWidget {
 		Model * model;
 };
 
-// Sleep 250ms after each calculation. 
-// This will cause the other window to hitch. Downside of single
-// thread.
+// Sleep 250ms for each 'calculation'. 
+// This will cause the other window to hitch. Downside of a 
+// single thread.
 class Calc: public QWidget {
 	Q_OBJECT
 	

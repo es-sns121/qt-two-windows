@@ -77,9 +77,10 @@ Calc::Calc(Model * model) :
 void Calc::do_work()
 {
 	calc_display->setText("Performing Calculation");
-	qApp->processEvents();	
-	struct timespec req, rem; // requested and remaining time to sleep. upon success remaining will be 0
-	
+	qApp->processEvents();	// Force a redraw by asking the app to process its event queue.
+
+	struct timespec req, rem; 	// Requested and remaining time to sleep. 
+								// Upon success rem will = 0.0
 	req.tv_sec  = 1;
 	req.tv_nsec = 500000000; 
 	

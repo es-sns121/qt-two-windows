@@ -11,7 +11,7 @@ class QLineEdit;
 class QPushButton;
 class QVBoxLayout;
 
-// Data the two windows will share.
+// Data the two windows can share.
 class Model : public QObject {
 	Q_OBJECT
 
@@ -36,29 +36,36 @@ class Counter : public QWidget {
 		Model * model;
 };
 
-// Delete a bunch of widgets. Sleep 100ms after each deletion. 
-// This will cause the other window to hitch. Downside of single
-// thread.
-class Widgets: public QWidget {
+class Calc_Data : public QObject {
+	Q_OBJECT
+
+	public slots:
+		void calculation();
+	
+	signals:
+		void finished();
+
+	private:
+		// Data would go here.
+};
+
+// Sleep 250ms for each 'calculation'. 
+// This will cause the other window to hitch. Downside of a 
+// single thread.
+class Calc: public QWidget {
 	Q_OBJECT
 	
 	public:
-		Widgets(Model * model);
+		Calc(Model * model);
 	
 	public slots:
-		void add_widgets();
-		void delete_widgets();
-
+		void do_work();
+		void done();	
 	private:
-		bool widgets_added;
-		
 		QVBoxLayout * layout;
 		
-		QPushButton * del_widgets_button; 
-		QPushButton * add_widgets_button;
-		
-		std::vector<QLineEdit *> widgets;
-		
+		QLabel * calc_display;
+
 		Model * model;
 };
 

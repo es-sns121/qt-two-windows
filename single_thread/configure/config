@@ -1,0 +1,4 @@
+QT_INCLUDE += -I$(QT_INC) -I$(QT_INC)/Qt -I$(QT_INC)/QtCore -I$(QT_INC)/QtGui 
+QT_LIBRARY += -L$(QT_LIB) -lQtCore -lQtGui
+
+CPP_FLAGS = -Wall -g -lpthread -lm 

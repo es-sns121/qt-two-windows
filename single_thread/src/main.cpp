@@ -8,10 +8,10 @@ int main (int argc, char **argv)
 	Model * model = new Model;
 	
 	Counter * counter = new Counter(model);
-	Widgets * widgets = new Widgets(model);
+	Calc * calc = new Calc(model);
 
 	counter->show();
-	widgets->show();
+	calc->show();
 
 	return app.exec();
 }

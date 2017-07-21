@@ -36,29 +36,23 @@ class Counter : public QWidget {
 		Model * model;
 };
 
-// Delete a bunch of widgets. Sleep 100ms after each deletion. 
+// Sleep 250ms after each calculation. 
 // This will cause the other window to hitch. Downside of single
 // thread.
-class Widgets: public QWidget {
+class Calc: public QWidget {
 	Q_OBJECT
 	
 	public:
-		Widgets(Model * model);
+		Calc(Model * model);
 	
 	public slots:
-		void add_widgets();
-		void delete_widgets();
-
-	private:
-		bool widgets_added;
+		void do_work();
 		
+	private:
 		QVBoxLayout * layout;
 		
-		QPushButton * del_widgets_button; 
-		QPushButton * add_widgets_button;
-		
-		std::vector<QLineEdit *> widgets;
-		
+		QLabel * calc_display;
+
 		Model * model;
 };
 

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <ctime>
 
+#include <QApplication>
 #include <QLabel>
 #include <QMutex>
 #include <QLineEdit>
@@ -21,8 +22,11 @@ Model::Model()
 Counter::Counter(Model * model) :
 	model(model)
 {
-	counter_display = new QLabel("blah blah blah");
+	counter_display = new QLabel;
 	counter_display->setFrameStyle(QFrame::VLine || QFrame::Raised);
+	counter_display->setFixedSize(200, 40);
+	
+	counter_display->setAlignment(Qt::AlignCenter);
 	
 	QVBoxLayout * layout = new QVBoxLayout;
 
@@ -32,7 +36,7 @@ Counter::Counter(Model * model) :
 
 	QTimer * timer = new QTimer(this);
 	QObject::connect(timer, SIGNAL (timeout()), this, SLOT(update_count()));
-	timer->start(1000);
+	timer->start(250);
 
 }
 
@@ -40,7 +44,7 @@ void Counter::update_count()
 {
 	model->mutex->lock();
 	
-	if   (model->count == 10) model->count = 1;
+	if   (model->count == 100) model->count = 1;
 	else model->count += 1;
 	
 	QString qStr;
@@ -50,69 +54,36 @@ void Counter::update_count()
 	counter_display->setText(qStr);
 }
 
-Widgets::Widgets(Model * model) :
-	widgets_added(false),
+Calc::Calc(Model * model) :
 	model(model)
 {
 	layout = new QVBoxLayout;
 	
-	add_widgets_button = new QPushButton;
-	add_widgets_button->setText("Add Widgets");
+	calc_display = new QLabel("Done");
+	calc_display->setFrameStyle(QFrame::VLine || QFrame::Raised);
+	calc_display->setFixedSize(200, 40);
 	
-	del_widgets_button = new QPushButton;
-	del_widgets_button->setText("Delete Widgets");
+	calc_display->setAlignment(Qt::AlignCenter);
 
-	QObject::connect(add_widgets_button, SIGNAL (clicked()), 
-		this, SLOT (add_widgets()));
-	
-	QObject::connect(del_widgets_button, SIGNAL (clicked()), 
-		this, SLOT (delete_widgets()));
-
-	layout->addWidget(add_widgets_button);
-	layout->addWidget(del_widgets_button);
-	
-	for (size_t i = 0; i < 10; ++i) {
-		widgets.push_back(new QLineEdit);
-		layout->addWidget(widgets[i]);
-	}
-	
-	widgets_added = true;
+	layout->addWidget(calc_display);
 
 	setLayout(layout);	
+	
+	QTimer * timer = new QTimer(this);
+	QObject::connect(timer, SIGNAL (timeout()), this, SLOT(do_work()));
+	timer->start(5000);
 }
 
-void Widgets::add_widgets()
+void Calc::do_work()
 {
-	if (widgets_added == true)
-		return;
+	calc_display->setText("Performing Calculation");
+	qApp->processEvents();	
+	struct timespec req, rem; // requested and remaining time to sleep. upon success remaining will be 0
 	
-	for (size_t i = 0; i < 10; ++i) {
-		widgets[i] = new QLineEdit;
-		layout->addWidget(widgets[i]);
-	}
+	req.tv_sec  = 1;
+	req.tv_nsec = 500000000; 
 	
-	setLayout(layout);
-
-	widgets_added = true;
-}
-
-void Widgets::delete_widgets()
-{
-	if (widgets_added == false)
-		return;
-
-	struct timespec req; 		// requested sleep
-	struct timespec rem; 		// remaining sleep. upon success, = 0
- 	
-	for (size_t i = 0; i < 10; ++i) {	
-		
-		delete widgets[i];
-
-		req.tv_sec = 0;  			
-		req.tv_nsec = 250000000;  	// .25 seconds
-		nanosleep(&req, &rem);		
-		setLayout(layout);
-	}
+	nanosleep(&req, &rem);
 	
-	widgets_added = false;
+	calc_display->setText("Done");
 }

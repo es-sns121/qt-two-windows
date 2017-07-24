@@ -34,12 +34,14 @@ Counter::Counter(Model * model) :
 
 	setLayout(layout);
 
+	// Timer will emit signal every 250 ms. 
 	QTimer * timer = new QTimer(this);
 	QObject::connect(timer, SIGNAL (timeout()), this, SLOT(update_count()));
 	timer->start(250);
 
 }
 
+// Increments count by 1, resets to 1 when 100 is reached.
 void Counter::update_count() 
 {
 	model->mutex->lock();
@@ -74,6 +76,7 @@ Calc::Calc(Model * model) :
 	timer->start(5000);
 }
 
+// Performs a 'calculation'
 void Calc::do_work()
 {
 	calc_display->setText("Performing Calculation");

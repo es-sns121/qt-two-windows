@@ -36,7 +36,7 @@ class Counter : public QWidget {
 		Model * model;
 };
 
-// Sleep 250ms for each 'calculation'. 
+// Sleep 1500 ms for each 'calculation'. 
 // This will cause the other window to hitch. Downside of a 
 // single thread.
 class Calc: public QWidget {

@@ -28,7 +28,12 @@ $(moc_out): $(moc_in)
 	@ mkdir -p moc
 	moc -o $(moc_out) $(moc_in)
 
-.PHONY: clean
+.PHONY: clean new
+
 clean:
 	@ printf "Cleaning '$(prod)' moc file and binary ...\n"
 	rm -rf $(moc_out) $(exe)
+
+new:
+	@ $(MAKE) -C . clean
+	@ $(MAKE) -C .

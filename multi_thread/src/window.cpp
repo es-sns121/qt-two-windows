@@ -87,22 +87,23 @@ void Calc::do_work()
 	
 	data->moveToThread(thread);
 
-	QObject::connect(thread, SIGNAL (started()),  data,   SLOT (calculation()));
-	QObject::connect(  data, SIGNAL (finished()), thread, SLOT (quit()));
-	QObject::connect(  data, SIGNAL (finished()), this,   SLOT (done()));
-	QObject::connect(  data, SIGNAL (finished()), data,   SLOT (deleteLater()));
-	QObject::connect(thread, SIGNAL (finished()), thread, SLOT (deleteLater()));
+	// Define start and end for code the thread will execute.
+	QObject::connect(thread, SIGNAL (started()),     data,   SLOT (calculation()));
+	QObject::connect(  data, SIGNAL (finished()),    thread, SLOT (quit()));
+	
+	// Send is emitted when calculation is done. Recieve displays the result.
+	QObject::connect(  data, SIGNAL (send(QString)), this,   SLOT (recieve(QString)));
+
+	// Clean up resources.
+	QObject::connect(  data, SIGNAL (finished()),    data,   SLOT (deleteLater()));
+	QObject::connect(thread, SIGNAL (finished()),    thread, SLOT (deleteLater()));
 
 	thread->start();
-
-	// Retrieve calculation result through some sort of signal\slot combo.
-	// Ex: connect( data, SIGNAL (send(calculated_data)), this, SLOT (receive(calculated_data))); 
-	// Then delete the data object by connecting Calc_Data::finished() to Calc_Data::deleteLater()
 }
 
-void Calc::done()
-{
-	calc_display->setText("Done");
+void Calc::recieve(QString message)
+{	
+	calc_display->setText(message);
 }
 
 void Calc_Data::calculation()
@@ -114,5 +115,6 @@ void Calc_Data::calculation()
 	
 	nanosleep(&req, &rem);
 
+	emit send(QString("Done"));
 	emit finished();
 }

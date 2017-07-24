@@ -43,6 +43,7 @@ class Calc_Data : public QObject {
 		void calculation();
 	
 	signals:
+		void send(QString);
 		void finished();
 
 	private:
@@ -60,7 +61,8 @@ class Calc: public QWidget {
 	
 	public slots:
 		void do_work();
-		void done();	
+		void recieve(QString);	
+	
 	private:
 		QVBoxLayout * layout;
 		

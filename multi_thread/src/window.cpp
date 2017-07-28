@@ -110,10 +110,15 @@ void Calc_Data::calculation()
 {
 	struct timespec req, rem; 	// Requested and remaining time to sleep. 
 								// Upon success rem will = 0.0
-	req.tv_sec  = 1;
+	req.tv_sec  = 0;
 	req.tv_nsec = 500000000; 
 	
-	nanosleep(&req, &rem);
+	int i = 0;
+	
+	while (i != 2) {
+		i = rand() % 6;
+		nanosleep(&req, &rem);
+	}
 
 	emit send(QString("Done"));
 	emit finished();
